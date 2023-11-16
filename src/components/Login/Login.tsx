@@ -1,12 +1,23 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Form, Button, Container, Row } from 'react-bootstrap';
 import { LoginWrapper } from './Login.styled';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { useLoginMutation } from '../../redux/slices/userApiSlice';
+import { setCredentials } from '../../redux/slices/authSlice';
 
 interface LoginProps { }
 
 const Login: FC<LoginProps> = () => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
+   const navigate = useNavigate();
+   const dispatch = useDispatch();
+
+   const [login] = useLoginMutation();
+
+   const { userInfo } = useSelector((state: any) => state.auth);
+
 
    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(event.target.value);
@@ -16,10 +27,24 @@ const Login: FC<LoginProps> = () => {
       setPassword(event.target.value);
    };
 
-   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       console.log(`Email: ${email}, Password: ${password}`);
+      try {
+         const res = await login({ "email": email, "password": password }).unwrap();
+         console.log(res);
+         dispatch(setCredentials({ ...res }));
+         navigate('/');
+      } catch (error) {
+         console.log(error);
+      }
    };
+
+   useEffect(() => {
+      if (userInfo) {
+         navigate('/');
+      }
+   }, [navigate, userInfo]);
 
    return (
       <LoginWrapper data-testid="Login">

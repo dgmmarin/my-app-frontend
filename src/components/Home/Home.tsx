@@ -6,8 +6,7 @@ interface HomeProps { }
 
 const Home: FC<HomeProps> = () => (
    <HomeWrapper data-testid="Home">
-      Home Component
-      <Counter />
+      Home Component You are logged in
    </HomeWrapper>
 );
 

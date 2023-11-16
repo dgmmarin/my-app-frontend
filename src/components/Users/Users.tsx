@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { UsersWrapper } from './Users.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { useListUsersMutation } from '../../redux/slices/userApiSlice';
@@ -14,6 +14,7 @@ const Users: FC<UsersProps> = () => {
    const { users } = useSelector((state: any) => state.users);
    const [usersList, setUsersList] = useState([{}]);
    const [listUsers, { isLoading }] = useListUsersMutation();
+   const interval = useRef<NodeJS.Timer | null>(null);
    const fetchUsers = useCallback(async () => {
       try {
          const res = await listUsers({}).unwrap();
@@ -29,7 +30,14 @@ const Users: FC<UsersProps> = () => {
       if (!isLoading && !_.isEqual(users, usersList)) {
          fetchUsers().then((users) => console.log("fetched users"));
       }
+      interval.current = setInterval(async () => {
+         await fetchUsers()
+      }, 5000);
+
       return () => {
+         if (interval.current) {
+            clearInterval(interval.current);
+         }
          console.log("cleanup");
       };
    }, [users, isLoading, usersList, fetchUsers, dispatch, listUsers]);

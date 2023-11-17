@@ -1,10 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   userInfo: localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo') || '')
     : null,
 };
+
+export const logoutAsync = createAsyncThunk(
+  'auth/logout',
+  async (amount: number) => {
+    return await Promise.resolve();
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -20,6 +27,13 @@ const authSlice = createSlice({
       localStorage.removeItem('userInfo');
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase('auth/logout', (state, action) => {
+        state.userInfo = null;
+        localStorage.removeItem('userInfo');
+      })
+  }
 });
 
 export const { setCredentials, logout } = authSlice.actions;

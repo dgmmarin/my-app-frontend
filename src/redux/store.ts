@@ -2,6 +2,7 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from './slices/counterSlice';
 import authReducer from './slices/authSlice';
 import usersReducer from './slices/usersSlice';
+import ordersReducer from './slices/ordersSlice';
 import { apiSlice } from './slices/apiSlice';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     auth: authReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
     users: usersReducer,
+    orders: ordersReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
   devTools: true,

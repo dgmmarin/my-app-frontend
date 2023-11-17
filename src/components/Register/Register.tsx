@@ -1,6 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { RegisterWrapper } from './Register.styled';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useRegisterMutation } from '../../redux/slices/userApiSlice';
+import { toast } from 'react-toastify';
 
 interface RegisterProps { }
 
@@ -11,6 +15,10 @@ const Register: FC<RegisterProps> = () => {
 	const [email, setEmail] = useState('');
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
+
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const [register] = useRegisterMutation();
 
 	const onChangePassword = (e: any) => {
 		setPassword(e.target.value);
@@ -43,6 +51,15 @@ const Register: FC<RegisterProps> = () => {
 			event.stopPropagation();
 		}
 		setValidated(true);
+		try {
+			const res = register({ "email": email, "password": password, "firstName": firstName, "lastName": lastName }).unwrap();
+			console.log(res);
+			navigate('/login');
+			toast.success('Registration successful');
+		} catch (error) {
+			console.log(error);
+			toast.error('Registration failed');
+		}
 	};
 
 	useEffect(() => {
@@ -87,23 +104,13 @@ const Register: FC<RegisterProps> = () => {
 					<Form.Check type="checkbox" label="Check me out" />
 				</Form.Group>
 				<Form.Group className="mb-3 d-flex justify-content-start" controlId="formBasicCheckbox">
-					<Row >
-						<Col>
-							<Button variant="primary" type="submit" className='mb-3'>
+					<div className='container mt-4'>
+						<Row>
+							<Button variant="primary" type="submit">
 								Submit
 							</Button>
-						</Col>
-						<Col>
-							<Button variant="warning" type="button" onClick={clearForm}>
-								Clear
-							</Button>
-						</Col>
-						<Col>
-							<Button variant="danger" type="button" onClick={clearForm}>
-								Cancel
-							</Button>
-						</Col>
-					</Row>
+						</Row>
+					</div>
 				</Form.Group>
 			</Form>
 		</Container>

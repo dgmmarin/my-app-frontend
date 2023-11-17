@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { useLoginMutation } from '../../redux/slices/userApiSlice';
 import { setCredentials } from '../../redux/slices/authSlice';
+import { toast } from 'react-toastify';
 
 interface LoginProps { }
 
@@ -13,12 +14,8 @@ const Login: FC<LoginProps> = () => {
    const [password, setPassword] = useState('');
    const navigate = useNavigate();
    const dispatch = useDispatch();
-
    const [login] = useLoginMutation();
-
    const { userInfo } = useSelector((state: any) => state.auth);
-
-
    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(event.target.value);
    };
@@ -35,8 +32,10 @@ const Login: FC<LoginProps> = () => {
          console.log(res);
          dispatch(setCredentials({ ...res }));
          navigate('/');
+         toast.success('Login successful');
       } catch (error) {
          console.log(error);
+         toast.error('Login failed');
       }
    };
 

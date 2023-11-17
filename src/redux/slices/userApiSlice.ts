@@ -18,7 +18,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     register: builder.mutation({
       query: (data) => ({
-        url: `${USERS_URL}`,
+        url: `${USERS_URL}/auth/register`,
         method: 'POST',
         body: data,
       }),
@@ -36,6 +36,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
+    listOrders: builder.mutation({
+      query: (userId: string | undefined) => ({
+        url: `${USERS_URL}${(userId !== undefined ? "/users/" + userId + "/orders" : "/orders")
+          }`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -45,4 +52,5 @@ export const {
   useRegisterMutation,
   useUpdateUserMutation,
   useListUsersMutation,
+  useListOrdersMutation,
 } = userApiSlice;

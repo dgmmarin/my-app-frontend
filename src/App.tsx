@@ -1,5 +1,6 @@
+/* eslint-disable react/style-prop-object */
 import './App.css';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
 import Profile from './components/Profile/Profile';
@@ -15,6 +16,7 @@ import Categories from './components/Categories/Categories';
 import Orders from './components/Orders/Orders';
 import Products from './components/Products/Products';
 import Roles from './components/Roles/Roles';
+import Sidebar from './components/Sidebar';
 
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
         <Header />
         <ToastContainer />
         <Container style={{ marginTop: "30px" }}>
-          <Routes >
+          <Routes>
             <Route path="" element={<PrivateRoute />}>
               <Route path="" element={<Home />} />
               <Route path="profile" element={<Profile />} />
@@ -43,7 +45,7 @@ function App() {
             <Route path="register" element={<Register />} />
           </Routes>
         </Container>
-      </BrowserRouter>
+      </BrowserRouter >
     </div >
   );
 }

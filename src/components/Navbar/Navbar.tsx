@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { NavbarWrapper } from './Navbar.styled';
-import { Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
+import { Container, Nav, NavDropdown, Navbar, Offcanvas } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
@@ -22,34 +22,40 @@ const Header: FC<NavbarProps> = () => {
 			console.error(err);
 		}
 	};
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
 	return <NavbarWrapper data-testid="Navbar">
 		<Navbar expand="lg" className="bg-body-tertiary">
 			<Container>
-				<Navbar.Toggle aria-controls="basic-navbar-nav" />
-				<Navbar.Collapse id="basic-navbar-nav">
-					<Nav className="ml-auto">
-						{userInfo ? (
-
-							<Nav.Link as={Link} to="/" className='ml-2'>Home</Nav.Link>
-						) : null}
-						{userInfo && userInfo.roles.includes('admin') ? (
-							<>
-								<Nav.Link as={Link} to="/users" className='ml-2'>Users</Nav.Link>
-								<Nav.Link as={Link} to="/roles" className='ml-2'>Roles</Nav.Link>
-							</>
-						) : null}
-						{userInfo ? (
-							<>
-								<Nav.Link as={Link} to="/orders" className='ml-2'>Orders</Nav.Link>
-								<Nav.Link as={Link} to="/products" className='ml-2'>Products</Nav.Link>
-								<Nav.Link as={Link} to="/categories" className='ml-2'>Categories</Nav.Link>
-
-							</>
-						) : null}
-					</Nav>
-				</Navbar.Collapse>
 				{userInfo ? (
 					<>
+						<Navbar.Toggle aria-controls="basic-navbar-nav" className='mx-1' onClick={() => handleShow()} />
+						<Navbar.Offcanvas id="basic-navbar-nav" show={show} onHide={handleClose}>
+							<Offcanvas.Header closeButton>
+								<Offcanvas.Title>Menu</Offcanvas.Title>
+							</Offcanvas.Header>
+
+							<Nav className="ml-auto" onClick={() => handleClose()}>
+								{userInfo ? (
+									<Nav.Link as={Link} to="/" className='mx-3'>Home</Nav.Link>
+								) : null}
+								{userInfo && userInfo.roles.includes('admin') ? (
+									<>
+										<Nav.Link as={Link} to="/users" className='mx-3'>Users</Nav.Link>
+										<Nav.Link as={Link} to="/roles" className='mx-3'>Roles</Nav.Link>
+									</>
+								) : null}
+								{userInfo ? (
+									<>
+										<Nav.Link as={Link} to="/orders" className='mx-3'>Orders</Nav.Link>
+										<Nav.Link as={Link} to="/products" className='mx-3'>Products</Nav.Link>
+										<Nav.Link as={Link} to="/categories" className='mx-3'>Categories</Nav.Link>
+
+									</>
+								) : null}
+							</Nav>
+						</Navbar.Offcanvas>
 						<NavDropdown className=""
 							title={userInfo.name} id='username'
 						>
@@ -68,8 +74,8 @@ const Header: FC<NavbarProps> = () => {
 					</>
 				)}
 			</Container>
-		</Navbar>
-	</NavbarWrapper>
+		</Navbar >
+	</NavbarWrapper >
 }
 
 export default Header;

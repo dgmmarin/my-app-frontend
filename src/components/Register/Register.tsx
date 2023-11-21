@@ -70,10 +70,7 @@ const Register: FC<RegisterProps> = () => {
 	}, [firstName, lastName, email, password, passwordConfirm]);
 
 	return <RegisterWrapper data-testid="Register">
-		<div>
-			<h4>Registration form</h4>
-		</div>
-		<Container className='d-flex justify-content-center'>
+		<Container className='justify-content-center'>
 			<Form noValidate validated={validated} onSubmit={handleSubmit}>
 				<Form.Group className="mb-3" controlId="formBasicFirstName">
 					<Form.Label style={{ float: 'left' }}>First Name</Form.Label>
@@ -100,18 +97,13 @@ const Register: FC<RegisterProps> = () => {
 					<Form.Control type="password" placeholder="Password Confirmation" value={passwordConfirm} onChange={onChangePasswordConfirm} />
 				</Form.Group>
 
-				<Form.Group className="mb-3 d-flex justify-content-start" controlId="formBasicCheckbox">
-					<Form.Check type="checkbox" label="Check me out" />
-				</Form.Group>
-				<Form.Group className="mb-3 d-flex justify-content-start" controlId="formBasicCheckbox">
-					<div className='container mt-4'>
-						<Row>
-							<Button variant="primary" type="submit">
-								Submit
-							</Button>
-						</Row>
-					</div>
-				</Form.Group>
+				<div className='container mt-4'>
+					<Row>
+						<Button variant="primary" type="submit">
+							Submit
+						</Button>
+					</Row>
+				</div>
 			</Form>
 		</Container>
 	</RegisterWrapper >

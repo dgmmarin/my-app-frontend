@@ -31,10 +31,11 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     listUsers: builder.mutation({
-      query: () => ({
-        url: `${USERS_URL}/users`,
+      query: ({ page, perPage }) => ({
+        url: `${USERS_URL}/users?page=${page}&limit=${perPage}`,
         method: 'GET',
       }),
+
     }),
     listOrders: builder.mutation({
       query: (userId: string | undefined) => ({
@@ -43,7 +44,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
     }),
-  }),
+  })
 });
 
 export const {

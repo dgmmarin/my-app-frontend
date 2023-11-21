@@ -67,12 +67,7 @@ const Header: FC<NavbarProps> = () => {
 							</NavDropdown.Item>
 						</NavDropdown>
 					</>
-				) : (
-					<>
-						<Nav.Link as={Link} to="/login"> <FaSignInAlt /> Sign In</Nav.Link>
-						<Nav.Link as={Link} to="/register"><FaSignOutAlt /> Sign Up</Nav.Link>
-					</>
-				)}
+				) : null}
 			</Container>
 		</Navbar >
 	</NavbarWrapper >

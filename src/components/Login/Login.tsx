@@ -47,21 +47,18 @@ const Login: FC<LoginProps> = () => {
 
    return (
       <LoginWrapper data-testid="Login">
-         <div>
-            <h4>Login form</h4>
-         </div>
-         <Container className='d-flex justify-content-center'>
+         <Container className='justify-content-center'>
             <Form onSubmit={handleSubmit}>
-               <Form.Group className="mb-4" controlId="formBasicEmail">
+               <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label style={{ float: 'left' }}>Email address</Form.Label>
                   <Form.Control type="email" placeholder="Enter email" value={email} onChange={handleEmailChange} />
                </Form.Group>
 
-               <Form.Group className="mb-4" controlId="formBasicPassword">
+               <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label style={{ float: 'left' }}>Password</Form.Label>
                   <Form.Control type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                </Form.Group>
-               <div className='container mt-4'>
+               <div className='container mt-3'>
                   <Row>
                      <Button variant="primary" type="submit">
                         Submit

@@ -1,40 +1,47 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { OrdersWrapper } from './Orders.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { useListOrdersMutation } from '../../redux/slices/userApiSlice';
 import { useParams } from 'react-router-dom';
-import { setOrders } from '../../redux/slices/ordersSlice';
+// import { setOrders } from '../../redux/slices/ordersSlice';
 import * as _ from 'lodash';
 import { toast } from 'react-toastify';
 import { Table } from 'react-bootstrap';
+import { fetchAllOrders } from '../../redux/slices/ordersSlice';
+import { AppDispatch } from '../../redux/store';
 
 interface OrdersProps { }
 
 const Orders: FC<OrdersProps> = () => {
    const { userId } = useParams();
-   const dispatch = useDispatch();
+   const dispatch: AppDispatch = useDispatch();
    const { orders } = useSelector((state: any) => state.orders);
-   const [ordersList, setOrdersList] = useState({} as any);
+   const [currentPage, setCurrentPage] = useState(0);
+   const { page } = useSelector((state: any) => state.orders);
+   const { loading } = useSelector((state: any) => state.orders);
    const [listOrders, { isLoading, error }] = useListOrdersMutation();
 
-   const fetchOrders = async () => {
-      console.log("fetching orders", userId);
+   const fetchOrders = useCallback(async () => {
       try {
-         const res = await listOrders(userId ?? undefined).unwrap();
-         console.log(res);
-         setOrdersList({ ...res });
-         dispatch(setOrders({ ...res }));
+         if (loading === 'idle' && orders.length === 0) {
+            console.log("fetching orders", userId);
+            await dispatch(fetchAllOrders(userId ?? undefined));
+            setTimeout(async () => {
+               return await Promise.resolve();
+            }, 5000);
+         }
       } catch (error) {
          console.log(error);
          toast.error('Error fetching orders');
       }
-   };
+   }, [dispatch, userId, loading, orders]);
 
    useEffect(() => {
-      if (!isLoading && !_.isEqual(orders, ordersList) && !error) {
-         fetchOrders().then((orders) => console.log("fetched orders"));
+      console.log(loading)
+      if (orders.length === 0 && !_.isEqual(currentPage, page) && !error && loading === 'idle') {
+         fetchOrders()
       }
-   });
+   }, [fetchOrders, orders, currentPage, page, error, loading]);
 
    return <OrdersWrapper data-testid="Orders">
       <Table responsive>
@@ -48,13 +55,13 @@ const Orders: FC<OrdersProps> = () => {
             </tr>
          </thead>
          <tbody>
-            {ordersList && Object.keys(ordersList).map((k, i) => {
+            {orders && Object.keys(orders).map((k, i) => {
                return <tr key={i}>
-                  <td>{ordersList[k].id}</td>
-                  <td>{ordersList[k].uuid}</td>
-                  <td>{ordersList[k].status}</td>
-                  <td>{ordersList[k].type}</td>
-                  <td>{ordersList[k].createdAt}</td>
+                  <td>{orders[k].id}</td>
+                  <td>{orders[k].uuid}</td>
+                  <td>{orders[k].status}</td>
+                  <td>{orders[k].type}</td>
+                  <td>{orders[k].createdAt}</td>
                </tr>
             })}
          </tbody>

@@ -17,14 +17,22 @@ import Orders from './components/Orders/Orders';
 import Products from './components/Products/Products';
 import Roles from './components/Roles/Roles';
 import Sidebar from './components/Sidebar';
+import { useSelector } from 'react-redux';
+import LoginRegister from './components/LoginRegister/LoginRegister';
 
 
 function App() {
+  const { userInfo } = useSelector((state: any) => state.auth);
   return (
     <div className="App">
       <BrowserRouter>
-        <Header />
         <ToastContainer />
+        {userInfo ?
+          <Header />
+          :
+          null
+        }
+
         <Container style={{ marginTop: "30px" }}>
           <Routes>
             <Route path="" element={<PrivateRoute />}>
@@ -41,8 +49,7 @@ function App() {
                 <Route path="roles" element={<Roles />} />
               </Route>
             </Route>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route path="login-register" element={<LoginRegister />} />
           </Routes>
         </Container>
       </BrowserRouter >

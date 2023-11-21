@@ -1,4 +1,6 @@
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
+import authSlice, { logout } from './authSlice';
+import { RootState } from '../store';
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
@@ -18,7 +20,16 @@ export const apiSlice = createApi({
         if (response.ok) {
           return data;
         }
+        console.log(response.status)
+        if (response.status === 401) {
+          localStorage.removeItem('userInfo');
+          return Promise.reject(data);
+        }
         return Promise.reject(data);
+      }
+      if (response.status === 401) {
+        localStorage.removeItem('userInfo');
+        return Promise.reject();
       }
       const message = await response.text();
       return Promise.reject(message);

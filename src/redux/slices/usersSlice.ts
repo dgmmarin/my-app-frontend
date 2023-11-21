@@ -5,6 +5,7 @@ const initialState = {
   total: 0,
   page: 1,
   perPage: 10,
+  pages: 0,
 };
 
 const usersSlice = createSlice({
@@ -12,7 +13,11 @@ const usersSlice = createSlice({
   initialState,
   reducers: {
     setUsers: (state, action) => {
-      state.users = action.payload;
+      state.users = action.payload.data;
+      state.total = action.payload.meta.total;
+      state.page = action.payload.meta.page;
+      state.perPage = action.payload.meta.limit;
+      state.pages = action.payload.meta.pages;
     },
   },
 })

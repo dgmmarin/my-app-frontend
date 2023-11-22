@@ -23,9 +23,9 @@ const CustomPagination: FC<PaginationProps> = (props: PaginationProps) => {
       <div>
          <Pagination>
             <Pagination.First onClick={(ev) => props.setPage(ev, 1)} />
-            <Pagination.Prev onClick={(ev) => props.setPage(ev, props.currentPage - 1)} />
+            <Pagination.Prev onClick={(ev) => 1 < props.currentPage ? props.setPage(ev, props.currentPage - 1) : null} />
             {items}
-            <Pagination.Next onClick={(ev) => props.setPage(ev, props.currentPage + 1)} />
+            <Pagination.Next onClick={(ev) => props.currentPage < props.totalPages ? props.setPage(ev, props.currentPage + 1) : null} />
             <Pagination.Last onClick={(ev) => props.setPage(ev, props.totalPages)} />
          </Pagination>
       </div>

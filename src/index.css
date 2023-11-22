@@ -7,7 +7,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
+#root,
+.App {
+  height: 100%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+@media (min-width: 769px) {
+  .elements {
+    margin-left: 250px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #sidebar-wrapper {
+    display: none !important;
+  }
+
 }

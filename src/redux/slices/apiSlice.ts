@@ -1,8 +1,10 @@
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
-import authSlice, { logout } from './authSlice';
-import { RootState } from '../store';
 
 export const apiSlice = createApi({
+  keepUnusedDataFor: 2,
+  // refetchOnFocus: true,
+  // refetchOnReconnect: true,
+  refetchOnMountOrArgChange: 3,
   baseQuery: fetchBaseQuery({
     baseUrl: '',
     prepareHeaders: (headers, { getState }) => {
@@ -35,6 +37,6 @@ export const apiSlice = createApi({
       return Promise.reject(message);
     },
   }),
-  tagTypes: ['User'],
+  tagTypes: ['User', 'Orders'],
   endpoints: (builder) => ({}),
 });

@@ -37,11 +37,33 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
 
     }),
+    listUsersQ: builder.query({
+      query: ({ page, perPage }) => ({
+        url: `${USERS_URL}/users?page=${page}&limit=${perPage}`,
+        method: 'GET',
+      }),
+
+    }),
     listOrders: builder.mutation({
       query: (userId: string | undefined) => ({
-        url: `${USERS_URL}${(userId !== undefined ? "/users/" + userId + "/orders" : "/orders")
-          }`,
+        url: `${USERS_URL}${(userId !== undefined ? "/users/" + userId + "/orders" : "/orders")}`,
         method: 'GET',
+      }),
+      invalidatesTags: ['Orders']
+    }),
+    listOrdersQ: builder.query({
+      query: ({ page, perPage, userId }) => ({
+        url: `${USERS_URL}${(userId !== undefined ? "/users/" + userId + "/orders" : "/orders")
+          }?page=${page}&limit=${perPage}`,
+        method: 'GET',
+        providesTags: ['Orders'],
+      }),
+    }),
+    listOrderSingle: builder.query({
+      query: ({ userId, orderId }) => ({
+        url: `${USERS_URL}${(userId !== undefined ? "/users/" + userId + "/orders/" + orderId : "/orders/" + orderId)}`,
+        method: 'GET',
+        providesTags: ['OrderShow'],
       }),
     }),
   })
@@ -53,5 +75,7 @@ export const {
   useRegisterMutation,
   useUpdateUserMutation,
   useListUsersMutation,
-  useListOrdersMutation,
+  useListOrdersQQuery,
+  useListUsersQQuery,
+  useListOrderSingleQuery,
 } = userApiSlice;

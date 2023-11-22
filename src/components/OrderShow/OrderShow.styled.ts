@@ -1,4 +1,4 @@
 import styled from 'styled-components';
 
-export const OrderItemWrapper = styled.div`
+export const OrderShowWrapper = styled.div`
 `;

@@ -1,9 +1,7 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { UsersWrapper } from './Users.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { useListUsersMutation } from '../../redux/slices/userApiSlice';
-import { setUsers } from '../../redux/slices/usersSlice';
-import { Table } from 'react-bootstrap';
+import { useListUsersQQuery } from '../../redux/slices/userApiSlice';
+import { Spinner, Table } from 'react-bootstrap';
 import * as _ from 'lodash';
 import { FaCheck, FaEye, FaFile, FaUserCircle, FaUserNinja } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -13,53 +11,40 @@ import CustomPagination from '../Pagination/Pagination';
 interface UsersProps { }
 
 const Users: FC<UsersProps> = () => {
-   const dispatch = useDispatch();
    const [page, setPage] = useState(1);
    const [perPage, setPerPage] = useState(10);
    const [totalPages, setTotalPages] = useState(0);
-   const { users } = useSelector((state: any) => state.users);
    const [usersList, setUsersList] = useState({} as any);
-   const [listUsers, { isLoading, error }] = useListUsersMutation();
+   const { data: users, isLoading, isSuccess, isError, error, refetch } = useListUsersQQuery({ page: page, perPage: perPage });
    const interval = useRef<NodeJS.Timer | null>(null);
 
    const changePage = (event: any, page: number) => {
-      console.log(page)
       setPage(page);
-      fetchUsers(page, perPage)
    }
 
-   const fetchUsers = useCallback(async (page: number, perPage: number) => {
-      try {
-         const res = await listUsers({ page: page, perPage: perPage }).unwrap();
-         console.log(res);
-         setUsersList(res.data);
-         setPage(res.meta.page);
-         setPerPage(res.meta.limit);
-         setTotalPages(res.meta.pages);
-         dispatch(setUsers({ ...res }));
-      } catch (error) {
-         console.log(error);
-      }
-   }, [listUsers, dispatch, setUsersList, setPage, setPerPage, setTotalPages]);
-
    useEffect(() => {
-      if (!isLoading && !_.isEqual(users, usersList) && !error) {
-         fetchUsers(page, perPage).then((users) => console.log("fetched users"));
+      if (users && users.data) {
+         setUsersList(users.data)
+         setPage(users.meta.page);
+         setPerPage(users.meta.limit);
+         setTotalPages(users.meta.pages);
       }
+
       interval.current = setInterval(async () => {
          if (!isLoading && !_.isEqual(users, usersList) && !error) {
-            fetchUsers(page, perPage).then((users) => console.log("fetched users inside interval"));
+            refetch();
          }
-      }, 15000);
+      }, 10000);
 
       return () => {
          if (interval.current) {
             clearInterval(interval.current);
          }
       };
-   }, [users, isLoading, usersList, fetchUsers, dispatch, listUsers, error, page, perPage, setPage, setPerPage, setTotalPages]);
+   }, [users, setUsersList, setPage, setPerPage, setTotalPages, usersList, isLoading, error, refetch]);
+
    return <UsersWrapper data-testid="Users">
-      <div>
+      {isLoading ? <Spinner /> : <div>
          <Table responsive bordered hover striped >
             <thead >
                <tr key={Math.random()}>
@@ -74,15 +59,15 @@ const Users: FC<UsersProps> = () => {
                </tr>
             </thead>
             <tbody>
-               {Object.keys(usersList).map((key, index) => {
+               {usersList && usersList && Object.keys(usersList).map((key, index) => {
                   return <tr key={usersList[key].uuid}>
                      <td><Link to={"/users/" + usersList[key].uuid} ><FaEye></FaEye> </Link></td>
                      <td>{usersList[key].firstName}</td>
                      <td>{usersList[key].lastName}</td>
                      <td>{usersList[key].email}</td>
                      <td>{Object.keys(usersList[key].roles).map((k, i) => usersList[key].roles[k].name === 'admin'
-                        ? <FaUserNinja className='mx-2' style={{ color: 'red' }} />
-                        : <FaUserCircle className='mx-2' style={{ color: 'blue' }} />)
+                        ? <FaUserNinja key={usersList[key].uuid + "_" + usersList[key].roles[k].name} className='mx-2' style={{ color: 'red' }} />
+                        : <FaUserCircle key={usersList[key].uuid + "_" + usersList[key].roles[k]} className='mx-2' style={{ color: 'blue' }} />)
                      }
                      </td>
                      <td>
@@ -105,9 +90,10 @@ const Users: FC<UsersProps> = () => {
                })}
             </tbody >
          </Table>
-      </div>
+      </div>}
 
       <CustomPagination perPage={perPage} currentPage={page} totalPages={totalPages} setPage={changePage}></CustomPagination>
    </UsersWrapper >
 }
 export default Users;
+

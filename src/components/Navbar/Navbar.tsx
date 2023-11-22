@@ -30,7 +30,7 @@ const Header: FC<NavbarProps> = () => {
 			<Container>
 				{userInfo ? (
 					<>
-						<Navbar.Toggle aria-controls="basic-navbar-nav" className='mx-1' onClick={() => handleShow()} />
+						<Navbar.Toggle aria-controls="basic-navbar-nav" className='' onClick={() => handleShow()} />
 						<Navbar.Offcanvas id="basic-navbar-nav" show={show} onHide={handleClose}>
 							<Offcanvas.Header closeButton>
 								<Offcanvas.Title>Menu</Offcanvas.Title>

@@ -35,13 +35,13 @@ const ordersSlice = createSlice({
   name: "orders",
   initialState,
   reducers: {
-    // setOrders: (state, action) => {
-    //   state.orders = action.payload.data;
-    //   state.total = action.payload.meta.total;
-    //   state.page = action.payload.meta.page;
-    //   state.perPage = action.payload.meta.limit;
-    //   state.pages = action.payload.meta.pages;
-    // },
+    setOrders: (state, action) => {
+      state.orders = action.payload.data;
+      state.total = action.payload.meta.total;
+      state.page = action.payload.meta.page;
+      state.perPage = action.payload.meta.limit;
+      state.pages = action.payload.meta.pages;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAllOrders.fulfilled, (state, action) => {
@@ -61,6 +61,6 @@ const ordersSlice = createSlice({
   }
 });
 
-// export const { setOrders } = ordersSlice.actions;
+export const { setOrders } = ordersSlice.actions;
 export { fetchAllOrders };
 export default ordersSlice.reducer;

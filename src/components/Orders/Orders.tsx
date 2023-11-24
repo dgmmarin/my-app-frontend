@@ -65,7 +65,7 @@ const Orders: FC<OrdersProps> = () => {
                      <td>{ordersList[k].description}</td>
                      <td>{ordersList[k].type}</td>
                      <td>
-                        <Link to={"/users/" + ordersList[k].user.uuid} >
+                        <Link to={"/users/" + ordersList[k].user?.uuid} >
                            <FaUserNinja
                               className='mx-2' ></FaUserNinja>
                         </Link>

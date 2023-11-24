@@ -66,6 +66,45 @@ export const userApiSlice = apiSlice.injectEndpoints({
         providesTags: ['OrderShow'],
       }),
     }),
+    listOrderProducts: builder.query({
+      query: ({ orderId }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId + "/products"}`,
+        method: 'GET',
+        providesTags: ['OrderProducts'],
+      }),
+    }),
+    increaseOrderProduct: builder.mutation({
+      query: ({ orderId, productId, quantity }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId + "/products/" + productId + "/increase"}`,
+        method: 'POST',
+        body: { quantity, productId },
+      }),
+    }),
+    decreaseOrderProduct: builder.mutation({
+      query: ({ orderId, productId, quantity }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId + "/products/" + productId + "/decrease"}`,
+        method: 'POST',
+        body: { quantity, productId },
+      }),
+    }),
+    deleteOrderProduct: builder.mutation({
+      query: ({ orderId, productId }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId + "/products/" + productId}`,
+        method: 'DELETE',
+      }),
+    }),
+    resolveOrderProduct: builder.mutation({
+      query: ({ orderId, productId }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId + "/products/" + productId + "/resolve"}`,
+        method: 'POST',
+      }),
+    }),
+    deleteOrder: builder.mutation({
+      query: ({ orderId }) => ({
+        url: `${USERS_URL}${"/orders/" + orderId}`,
+        method: 'DELETE',
+      }),
+    }),
   })
 });
 
@@ -78,4 +117,10 @@ export const {
   useListOrdersQQuery,
   useListUsersQQuery,
   useListOrderSingleQuery,
+  useListOrderProductsQuery,
+  useIncreaseOrderProductMutation,
+  useDecreaseOrderProductMutation,
+  useDeleteOrderProductMutation,
+  useResolveOrderProductMutation,
+  useDeleteOrderMutation,
 } = userApiSlice;
